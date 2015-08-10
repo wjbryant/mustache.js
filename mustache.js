@@ -554,7 +554,10 @@
 
     var value = isFunction(partials) ? partials(token[1]) : partials[token[1]];
     if (value != null)
-      return this.renderTokens(this.parse(value), context, partials, value);
+      if (typeof value === 'string') {
+        value = this.parse(value);
+      }
+      return this.renderTokens(value, context, partials, value);
   };
 
   Writer.prototype.unescapedValue = function unescapedValue (token, context) {
