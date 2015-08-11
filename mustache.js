@@ -548,7 +548,12 @@
     var value = isFunction(partials) ? partials(token[1]) : partials[token[1]];
     var parsedValue;
     if (value != null) {
-      parsedValue = typeof value === 'string' ? this.parse(value) : value;
+      if (typeof value === 'string') {
+        parsedValue = this.parse(value);
+      } else {
+        parsedValue = value;
+        value = null;
+      }
       return this.renderTokens(parsedValue, context, partials, value);
     }
   };
