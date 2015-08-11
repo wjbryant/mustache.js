@@ -442,9 +442,16 @@
    * Parses and caches the given `template` and returns the array of tokens
    * that is generated from the parse.
    */
-  Writer.prototype.parse = function parse (template, tags) {
-    var cache = this.cache;
-    var tokens = cache[template];
+  Writer.prototype.parse = function parse (template, tags, bypassCache) {
+    var cache,
+      tokens;
+
+    if (bypassCache) {
+      return parseTemplate(template, tags);
+    }
+
+    cache = this.cache;
+    tokens = cache[template];
 
     if (tokens == null)
       tokens = cache[template] = parseTemplate(template, tags);
