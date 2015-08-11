@@ -546,15 +546,26 @@
     if (!partials) return;
 
     var value = isFunction(partials) ? partials(token[1]) : partials[token[1]];
-    var parsedValue;
+    var originalValue,
+      parsedValue;
+
     if (value != null) {
-      if (typeof value === 'string') {
-        parsedValue = this.parse(value);
-      } else {
-        parsedValue = value;
-        value = null;
+      switch (typeStr(value)) {
+        case 'string':
+          originalValue = value;
+          parsedValue = this.parse(value);
+          break;
+        case 'array':
+          originalValue = null;
+          parsedValue = value;
+          break;
+        case 'object':
+          originalValue = value.original || null;
+          parsedValue = value.parsed || this.parse(originalValue);
+          break;
       }
-      return this.renderTokens(parsedValue, context, partials, value);
+
+      return this.renderTokens(parsedValue, context, partials, originalValue);
     }
   };
 
